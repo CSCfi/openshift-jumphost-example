@@ -1,0 +1,7 @@
+- hosts: localhost
+  tasks:
+  - include_role:
+      name: instances
+
+  - include_role:
+      name: openstack_facts

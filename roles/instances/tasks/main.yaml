@@ -1,0 +1,3 @@
+- include_tasks: create_security_groups.yaml
+- include_tasks: create_jumphost.yaml
+- include_tasks: create_instances.yaml
