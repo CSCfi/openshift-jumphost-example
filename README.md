@@ -43,6 +43,7 @@ In `group_vars/all.yaml`:
 - `number_instances`: You can edit the number of instances you want behind the `jumphost`. In this example, we set to `4`.  
 - `jumphost_name` & `instances_name`: You can edit the name of the jumphost and the name of the instances.
 - `os_image`: You can edit which Operating System you want to use for the jumphost and the instances. (`openstack images list` to retrieve all images available).
+- `user`: By default `ubuntu`. If you want CentOS machines, replace it by `cloud-user`.
 - `flavor`: Choose the flavor you want to use (`openstack flavor list` to retrieve all flavors available).
 - `key_name`: Either the name of your ssh key that you use to connect to cPouta instances or the name of the newly created key for this deployment. (Don't forget to upload this newly created key in your cPouta project).
 - `internal_ips`: Edit the list and secure your instances by allowing only few networks to connect through SSH.
@@ -66,23 +67,23 @@ After running this playbook, you need to edit the ssh config file. Go to `~/.ssh
 Add the jumphost and the different instances. Here is an example:  
 ```
 Host jumphost
-        User ubuntu
+        User ubuntu # Or cloud-user if you deployed CentOS-7 machines
         Hostname <Floating-IP>
 
 Host behind-jh-1
-        User ubuntu
+        User ubuntu # Or cloud-user if you deployed CentOS-7 machines
         ProxyJump jumphost
 
 Host behind-jh-2
-        User ubuntu
+        User ubuntu # Or cloud-user if you deployed CentOS-7 machines
         ProxyJump jumphost
 
 Host behind-jh-3
-        User ubuntu
+        User ubuntu # Or cloud-user if you deployed CentOS-7 machines
         ProxyJump jumphost
 
 Host behind-jh-4
-        User ubuntu
+        User ubuntu # Or cloud-user if you deployed CentOS-7 machines
         ProxyJump jumphost
 ```
 
