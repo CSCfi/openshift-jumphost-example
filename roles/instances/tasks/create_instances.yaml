@@ -40,7 +40,7 @@
     name: "{{ item.name }}"
     groups: instances_group
     ansible_host: "{{ item.access_ipv4 }}"
-    ansible_user: ubuntu
+    ansible_user: "{{ user }}"
     ansible_host_private_ipv4: "{{ item.addresses[network][0].addr }}"
   with_items:
     - "{{ instances_facts.results[0].servers }}"

@@ -21,22 +21,22 @@
   - name: Copy public key
     ansible.builtin.copy:
       src: id_rsa-jh.pub
-      dest: /home/ubuntu/.ssh/id_rsa-jh.pub
-      owner: "ubuntu"
-      group: "ubuntu"
+      dest: /home/{{ user }}/.ssh/id_rsa-jh.pub
+      owner: "{{ user }}"
+      group: "{{ user }}"
       mode: '0644'
 
   - name: Copy private key
     ansible.builtin.copy:
       src: id_rsa-jh
-      dest: /home/ubuntu/.ssh/id_rsa-jh
-      owner: "ubuntu"
-      group: "ubuntu"
+      dest: /home/{{ user }}/.ssh/id_rsa-jh
+      owner: "{{ user }}"
+      group: "{{ user }}"
       mode: '0600'
 
   - name: Set authorized key taken from files
     authorized_key:
-      user: "ubuntu"
+      user: "{{ user }}"
       state: present
       key: "{{ lookup('file', item) }}"
     with_fileglob: "keys/*"
