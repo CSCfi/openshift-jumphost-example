@@ -23,6 +23,11 @@ and the latest version of `openstacksdk` for Python: https://pypi.org/project/op
 pip install openstacksdk
 ```
 
+`ansible.posix` collection is need for `authorized_key` module. Install it by typing this command:  
+```sh
+ansible-galaxy collection install ansible.posix
+```
+
 You must source your project before launching this playbook:  
 ```sh
 source project_xxxxxxx
