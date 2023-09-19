@@ -26,14 +26,6 @@
       group: "{{ user }}"
       mode: '0644'
 
-  - name: Copy private key
-    ansible.builtin.copy:
-      src: id_rsa-jh
-      dest: /home/{{ user }}/.ssh/id_rsa-jh
-      owner: "{{ user }}"
-      group: "{{ user }}"
-      mode: '0600'
-
   - name: Set authorized key taken from files
     authorized_key:
       user: "{{ user }}"
