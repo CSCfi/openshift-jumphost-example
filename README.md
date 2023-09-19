@@ -39,7 +39,7 @@ The format of the files must be like `xxx.keys`
 During the playbook, it will read those files and add the public keys to the `authorized_keys` file of the different hosts.
 
 
-## Custom your run
+## Custom your playbook
 In `group_vars/all.yaml`:
 - `number_instances`: You can edit the number of instances you want behind the `jumphost`. In this example, we set to `4`.  
 - `jumphost_name` & `instances_name`: You can edit the name of the jumphost and the name of the instances.
