@@ -34,8 +34,7 @@ ssh-add files/id_rsa
 ```
 For this template, you can create a new pair of keys. Just remember to upload it in your cPouta project.  
 
-Create a folder `keys`, add all the public keys you want to authorize to connect to the different hosts.  
-The format of the files must be like `xxx.keys`  
+Create a folder `keys`, add all the public keys you want to authorize to connect to the different hosts.    
 During the playbook, it will read those files and add the public keys to the `authorized_keys` file of the different hosts.
 
 
