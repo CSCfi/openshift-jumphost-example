@@ -1,0 +1,46 @@
+---
+- name: Create instance
+  openstack.cloud.server:
+    state: "{{ state }}"
+    name: "{{ item }}"
+    image: "{{ os_image }}"
+    flavor: "{{ flavor }}"
+    key_name: "{{ key_name }}"
+    network: "{{ network }}"
+    security_groups: "{{ jumphost_name }}-security-group"
+    meta:
+      group: "{{ instance_name }}"
+  retries: 3
+  async: 300
+  poll: 0
+  register: servers
+  with_sequence: start=1 end={{ number_instances }} format={{ instance_name }}-%d
+
+- name: Checking instances started
+  async_status:
+    jid: "{{ item.ansible_job_id }}"
+  register: srv
+  until: srv.finished
+  retries: 60
+  delay: 5
+  with_items:
+    - "{{ servers.results }}"
+
+- name: Register openstack instances facts
+  openstack.cloud.server_info:
+    filters:
+      metadata:
+        group: "{{ item }}"
+  register: instances_facts
+  with_items:
+    - "{{ instance_name }}"
+
+- name: Building instances inventory
+  add_host:
+    name: "{{ item.name }}"
+    groups: instances_group
+    ansible_host: "{{ item.access_ipv4 }}"
+    ansible_user: ubuntu
+    ansible_host_private_ipv4: "{{ item.addresses[network][0].addr }}"
+  with_items:
+    - "{{ instances_facts.results[0].servers }}"

@@ -1,0 +1,46 @@
+---
+- name: Create jumphost
+  openstack.cloud.server:
+    state: "{{ state }}"
+    name: "{{ jumphost_name }}"
+    image: "{{ os_image }}"
+    flavor: "{{ flavor }}"
+    key_name: "{{ key_name }}"
+    network: "{{ network }}"
+    security_groups: "{{ jumphost_name }}-security-group"
+    meta:
+      group: "{{ jumphost_name }}"
+  retries: 3
+  async: 300
+  poll: 0
+  register: jumphost
+
+- name: Checking jumphost started
+  async_status:
+    jid: "{{ item.ansible_job_id }}"
+  register: jh
+  until: jh.finished
+  retries: 60
+  delay: 5
+  with_items:
+    - "{{ jumphost }}"
+
+- name: Register openstack jumphost facts
+  openstack.cloud.server_info:
+    filters:
+      metadata:
+        group: "{{ item }}"
+  register: jh_facts
+  with_items:
+    - "{{ jumphost_name }}"
+
+- name: Building jumphost inventory
+  add_host:
+    name: "{{ item.name }}"
+    groups: jumphost_group
+    ansible_host: "{{ item.access_ipv4 }}"
+    ansible_user: ubuntu
+    ansible_host_private_ipv4: "{{ item.addresses[network][0].addr }}"
+  with_items:
+    - "{{ jh_facts.results[0].servers }}"
+    

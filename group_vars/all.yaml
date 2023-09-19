@@ -1,14 +1,13 @@
 ---
-number_instances: 3
+number_instances: 4
 state: present
-instance_name: test
+jumphost_name: jumphost
+instance_name: behind-jh
 os_image: Ubuntu-22.04
 flavor: standard.tiny
-# key_name: <key_name>
-# network: <network>
+key_name: <key_you_want_to_use> # Type the name of your key. (You can retrieve this information from cPouta > Compute > Key Pairs)
 
-internal_ips:
-  - 193.166.85.0/24
-  - 193.166.1.0/24
-  - 193.166.2.0/24
-  - 193.166.80.0/23
+internal_ips: # Edit those addresses
+  - 192.168.0.1/24
+  - 192.168.0.2/24
+  - 192.168.0.3/24

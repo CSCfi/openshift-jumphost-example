@@ -1,13 +1,39 @@
+---
 - name: Create security group
   openstack.cloud.security_group:
     state: present
-    name: "jumphost-security-group"
-    description: "Security group for jumphost"
+    name: "{{ jumphost_name}}-security-group"
+    description: "Security group for {{ jumphost_name}}"
 
-- name: Add port 22 opening to ips {{ internal_ips }} to rule {{ instance_name }}
+- name: Internal traffic TCP
   openstack.cloud.security_group_rule:
     state: "{{ state }}"
-    security_group: "{{ instance_name }}-security-group"
+    security_group: "{{ jumphost_name }}-security-group"
+    protocol: tcp
+    port_range_min: 1
+    port_range_max: 65535
+    remote_ip_prefix: 192.168.0.0/16
+
+- name: Internal traffic UDP
+  openstack.cloud.security_group_rule:
+    state: "{{ state }}"
+    security_group: "{{ jumphost_name }}-security-group"
+    protocol: udp
+    port_range_min: 1
+    port_range_max: 65535
+    remote_ip_prefix: 192.168.0.0/16    
+
+- name: Internal traffic ICMP
+  openstack.cloud.security_group_rule:
+    state: "{{ state }}"
+    security_group: "{{ jumphost_name }}-security-group"
+    protocol: icmp
+    remote_ip_prefix: 192.168.0.0/16
+
+- name: Add port 22 opening to ips {{ internal_ips }} to rule {{ jumphost_name}}-security-group
+  openstack.cloud.security_group_rule:
+    state: "{{ state }}"
+    security_group: "{{ jumphost_name}}-security-group"
     protocol: tcp
     port_range_min: 22
     port_range_max: 22
@@ -15,18 +41,9 @@
   with_items:
     - "{{ internal_ips }}"
 
-- name: Add port 80 opening to rule {{ instance_name }}
-  openstack.cloud.security_group_rule:
-    state: "{{ state }}"
-    security_group: "{{ instance_name }}-security-group"
-    protocol: tcp
-    port_range_min: 80
-    port_range_max: 80
-    remote_ip_prefix: 0.0.0.0/0
-
 ## default Security Group
 - openstack.cloud.security_group_rule:
-    security_group: "{{ instance_name }}-security-group"
+    security_group: "{{ jumphost_name }}-security-group"
     state: "{{ state }}"
     direction: egress
     protocol: any
@@ -35,7 +52,7 @@
 
 - openstack.cloud.security_group_rule:
     state: "{{ state }}"
-    security_group: "{{ instance_name }}-security-group"
+    security_group: "{{ jumphost_name }}-security-group"
     ethertype: IPv6
     direction: egress
     protocol: any

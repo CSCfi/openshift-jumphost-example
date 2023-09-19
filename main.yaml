@@ -1,7 +1,69 @@
-- hosts: localhost
-  tasks:
-  - include_role:
-      name: instances
+---
+- name: Create VMs
+  hosts: localhost
+  vars_prompt:
+    - name: network
+      prompt: Network?
+      private: false  
+  roles:
+  - instances
 
-  - include_role:
-      name: openstack_facts
+- name: Configure VMs
+  hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+  - name: Wait before connecting to host
+    wait_for_connection:
+      delay: 15
+      timeout: 30
+
+  - name: Copy public key
+    ansible.builtin.copy:
+      src: id_rsa-jh.pub
+      dest: /home/ubuntu/.ssh/id_rsa-jh.pub
+      owner: "ubuntu"
+      group: "ubuntu"
+      mode: '0644'
+
+  - name: Copy private key
+    ansible.builtin.copy:
+      src: id_rsa-jh
+      dest: /home/ubuntu/.ssh/id_rsa-jh
+      owner: "ubuntu"
+      group: "ubuntu"
+      mode: '0600'
+
+  - name: Set authorized key taken from files
+    authorized_key:
+      user: "ubuntu"
+      state: present
+      key: "{{ lookup('file', item) }}"
+    with_fileglob: "keys/*"
+    tags:
+      - keys
+
+  - name: Enumerate all cluster hosts within the /etc/hosts file
+    blockinfile:
+      dest: /etc/hosts
+      marker: "# {mark} ANSIBLE MANAGED: JumpHost examples Hosts"
+      content: |
+        {% for host in groups['all'] %}
+        {{ hostvars[host]['ansible_host_private_ipv4'] }} {{ host }}
+        {% endfor %}
+    tags:
+      - hosts
+
+- name: Cleanup
+  hosts: localhost
+  gather_facts: false
+  tasks:
+  - name: Remove Floating IPs from instances
+    openstack.cloud.floating_ip:
+      state: absent
+      server: "{{ hostvars[item]['inventory_hostname'] }}"
+      floating_ip_address: "{{ hostvars[item]['ansible_host'] }}"
+      network: "{{ hostvars[item]['network'] }}"
+    with_items: 
+    - "{{ groups['instances_group'] }}"
+    when: not state is search("absent")
