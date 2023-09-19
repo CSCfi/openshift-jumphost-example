@@ -28,14 +28,14 @@ You must source your project before launching this playbook:
 source project_xxxxxxx
 ```
 
-Also, there will be a need to ssh to the newly created instances during the playbook. Copy the key public and private key in `files` folder and add the private key with this command:  
+Also, there will be a need to ssh to the newly created instances during the playbook. Create a folder `files` and copy the key public and private key in this folder and add the private key with this command:  
 ```sh
 ssh-add files/id_rsa
 ```
 For this template, you can create a new pair of keys. Just remember to upload it in your cPouta project.  
 
-In the folder `keys`, add all the public keys you want to authorize to connect to the different hosts.  
-It must be in the format `xxx.keys`  
+Create a folder `keys`, add all the public keys you want to authorize to connect to the different hosts.  
+The format of the files must be like `xxx.keys`  
 During the playbook, it will read those files and add the public keys to the `authorized_keys` file of the different hosts.
 
 
