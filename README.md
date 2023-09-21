@@ -67,34 +67,6 @@ ansible-playbook -e network=project_xxxx main.yaml
 ```
 
 
-## Final steps
-After running this playbook, you need to edit the ssh config file. Go to `~/.ssh` and edit `config`.  
-Add the jumphost and the different instances. Here is an example:  
-```
-Host jumphost
-        User ubuntu # Or cloud-user if you deployed CentOS-7 machines
-        Hostname <Floating-IP>
-
-Host behind-jh-1
-        User ubuntu # Or cloud-user if you deployed CentOS-7 machines
-        ProxyJump jumphost
-
-Host behind-jh-2
-        User ubuntu # Or cloud-user if you deployed CentOS-7 machines
-        ProxyJump jumphost
-
-Host behind-jh-3
-        User ubuntu # Or cloud-user if you deployed CentOS-7 machines
-        ProxyJump jumphost
-
-Host behind-jh-4
-        User ubuntu # Or cloud-user if you deployed CentOS-7 machines
-        ProxyJump jumphost
-```
-
-You can write any name next to `Host`. Usually, we enter the same as our instances deployed.
-
-
 ## Cleanup
 To clean everything, run this command:  
 ```sh
