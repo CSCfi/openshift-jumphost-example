@@ -35,7 +35,7 @@ source project_xxxxxxx
 
 Also, there will be a need to ssh to the newly created instances during the playbook. Create a folder `files` and copy your public key in this folder and add the key with this command:  
 ```sh
-ssh-add files/id_rsa.pub
+ssh-add path/to/your/private_key
 ```
 For this template, you can create a new key. Just remember to upload it to your cPouta project.  
 

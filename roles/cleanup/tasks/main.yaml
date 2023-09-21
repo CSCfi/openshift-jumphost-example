@@ -1,0 +1,10 @@
+---
+- name: Remove Floating IPs from instances
+  openstack.cloud.floating_ip:
+    state: absent
+    server: "{{ hostvars[item]['inventory_hostname'] }}"
+    floating_ip_address: "{{ hostvars[item]['ansible_host'] }}"
+    network: "{{ hostvars[item]['network'] }}"
+  with_items: 
+  - "{{ groups['instances_group'] }}"
+  when: not state is search("absent")

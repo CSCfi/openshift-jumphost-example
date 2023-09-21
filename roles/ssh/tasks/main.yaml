@@ -1,0 +1,26 @@
+---
+- name: Add JumpHost in SSH config file
+  community.general.ssh_config:
+    state: "{{ state }}"
+    user: "{{ ansible_facts.user_id }}"
+    host: "{{ jumphost_name }}"
+    remote_user: "{{ user }}"
+    hostname: "{{ hostvars[item]['ansible_host'] }}"
+  ignore_errors: true
+  with_items:
+  - "{{ groups['jumphost_group'] }}"
+  tags:
+  - ssh_config
+
+- name: Add others hosts in SSH config file
+  community.general.ssh_config:
+    state: "{{ state }}"
+    user: "{{ ansible_facts.user_id }}"
+    host: "{{ hostvars[item]['inventory_hostname'] }}"
+    proxyjump: "{{ jumphost_name }}"
+    remote_user: "{{ user }}"
+  ignore_errors: true
+  with_items:
+  - "{{ groups['instances_group']}}"
+  tags:
+  - ssh_config

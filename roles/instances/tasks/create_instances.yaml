@@ -24,7 +24,7 @@
   retries: 60
   delay: 5
   with_items:
-    - "{{ servers.results }}"
+  - "{{ servers.results }}"
 
 - name: Register openstack instances facts
   openstack.cloud.server_info:
@@ -33,7 +33,9 @@
         group: "{{ item }}"
   register: instances_facts
   with_items:
-    - "{{ instance_name }}"
+  - "{{ instance_name }}"
+  tags:
+  - ssh_config
 
 - name: Building instances inventory
   add_host:
@@ -43,4 +45,6 @@
     ansible_user: "{{ user }}"
     ansible_host_private_ipv4: "{{ item.addresses[network][0].addr }}"
   with_items:
-    - "{{ instances_facts.results[0].servers }}"
+  - "{{ instances_facts.results[0].servers }}"
+  tags:
+  - ssh_config
