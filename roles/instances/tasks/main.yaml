@@ -1,11 +1,16 @@
 - include_tasks: 
     file: create_security_groups.yaml
+
 - include_tasks: 
     file: create_instances.yaml
   tags: 
   - ssh_config
+  - hosts
+  - keys
 
 - include_tasks: 
     file: create_jumphost.yaml
   tags: 
   - ssh_config
+  - hosts
+  - keys

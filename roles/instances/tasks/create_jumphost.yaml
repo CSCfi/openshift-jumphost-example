@@ -35,6 +35,8 @@
   - "{{ jumphost_name }}"
   tags:
   - ssh_config
+  - hosts
+  - keys
 
 - name: Building jumphost inventory
   add_host:
@@ -46,4 +48,7 @@
   with_items:
   - "{{ jh_facts.results[0].servers }}"
   tags:
-    - ssh_config
+  - ssh_config
+  - hosts
+  - keys
+  

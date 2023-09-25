@@ -36,6 +36,8 @@
   - "{{ instance_name }}"
   tags:
   - ssh_config
+  - hosts
+  - keys
 
 - name: Building instances inventory
   add_host:
@@ -48,3 +50,6 @@
   - "{{ instances_facts.results[0].servers }}"
   tags:
   - ssh_config
+  - hosts
+  - keys
+  

@@ -6,10 +6,30 @@
     prompt: Network?
     private: false
   tasks:
+  # Include this role to gather information about instances before assigning Floating IP>
+  # Needed for tags hosts and keys
+  - include_role:
+      name: instances
+    tags:
+    - hosts
+    - keys
+    when: "'hosts' in ansible_run_tags or 'keys' in ansible_run_tags"
+  
+  # Add a floating IP to the instances to reconfigure them.
+  # Needed for tags hosts and keys
+  - include_role:
+      name: floatingip
+    tags:
+    - hosts
+    - keys
+    when: "'hosts' in ansible_run_tags or 'keys' in ansible_run_tags"
+    
   - include_role: 
       name: instances
     tags: 
     - ssh_config
+    - hosts
+    - keys
 
 - name: Configure VMs
   hosts: all
@@ -18,6 +38,9 @@
   tasks:
   - include_role:
       name: configuration
+  tags:
+  - hosts
+  - keys
 
 - name: Cleanup
   hosts: localhost
@@ -25,6 +48,9 @@
   tasks:
   - include_role:
       name: cleanup
+  tags:
+  - hosts
+  - keys
 
 - name: Update SSH config
   hosts: localhost
