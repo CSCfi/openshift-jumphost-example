@@ -4,7 +4,7 @@
     state: "{{ state }}"
     name: "{{ jumphost_name }}"
     image: "{{ os_image }}"
-    flavor: "{{ flavor }}"
+    flavor: "{{ flavor_jumphost }}"
     key_name: "{{ key_name }}"
     network: "{{ network }}"
     security_groups: "{{ jumphost_name }}-security-group"
